@@ -11,6 +11,7 @@ app.use(express.json());
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Methods", "GET, POST, HEAD, OPTIONS, PUT, PATCH, DELETE");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
@@ -76,13 +77,14 @@ app.post('/lists/:listId/tasks', (req, res) => {
 });
 
 app.patch('/lists/:listId/tasks/:taskId', (req, res) => {
-    List.findOneAndUpdate({
+    Task.findOneAndUpdate({
         _id: req.params.taskId,
-        _listId: req.params.listId
+        _listId: req.params.listId,
+        completed: req.params.completed
     }, {
         $set: req.body
     }).then(() => {
-        res.sendStatus(200);
+        res.send({message: 'Updated successfully.'});
     });
 });
 
